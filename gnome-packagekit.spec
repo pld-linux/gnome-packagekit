@@ -1,14 +1,15 @@
 Summary:	GNOME PackageKit Client
 Name:		gnome-packagekit
-Version:	0.1.9
+Version:	0.1.10
 Release:	1
 License:	GPL v2+
 Group:		X11/Applications
 Source0:	http://people.freedesktop.org/~hughsient/releases/%{name}-%{version}.tar.gz
-# Source0-md5:	531969d7299aeb1c9a19453481541c60
+# Source0-md5:	dfb88547d4b1bdc7a030911de54e5a73
 URL:		http://www.packagekit.org/
 BuildRequires:	GConf2-devel
-BuildRequires:	PackageKit-devel >= 0.1.8
+BuildRequires:	PackageKit-devel >= 0.1.10
+BuildRequires:	PolicyKit-gnome-devel >= 0.7
 BuildRequires:	autoconf >= 2.52
 BuildRequires:	automake
 BuildRequires:	dbus-devel >= 1.1.4
@@ -23,6 +24,8 @@ BuildRequires:	libsexy-devel >= 0.1.11
 BuildRequires:	libtool
 BuildRequires:	pkgconfig
 Requires(post,preun):	GConf2
+Requires:	PackageKit >= 0.1.10
+Requires:	PolicyKit-gnome >= 0.7
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
