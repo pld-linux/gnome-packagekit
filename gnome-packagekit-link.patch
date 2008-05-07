@@ -1,0 +1,11 @@
+diff -urN gnome-packagekit-0.2.0/src/Makefile.am gnome-packagekit-0.2.0.new/src/Makefile.am
+--- gnome-packagekit-0.2.0/src/Makefile.am	2008-05-06 19:28:53.000000000 +0200
++++ gnome-packagekit-0.2.0.new/src/Makefile.am	2008-05-07 15:09:17.000000000 +0200
+@@ -243,6 +243,7 @@
+ 
+ gpk_self_test_LDADD =						\
+ 	$(shared_LIBS)						\
++	$(SELFTEST_LIBS)					\
+ 	$(NULL)
+ 
+ gpk_self_test_CPPFLAGS = -DPK_BUILD_TESTS
