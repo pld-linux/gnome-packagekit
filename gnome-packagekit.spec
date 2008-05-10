@@ -1,15 +1,14 @@
 Summary:	GNOME PackageKit Client
 Name:		gnome-packagekit
-Version:	0.2.0
+Version:	0.2.1
 Release:	1
 License:	GPL v2+
 Group:		X11/Applications
 Source0:	http://people.freedesktop.org/~hughsient/releases/%{name}-%{version}.tar.gz
-# Source0-md5:	3da0c96a5af09db281240700d4d575e6
-Patch0:		%{name}-link.patch
+# Source0-md5:	9e13c842bd2e96b766403c27743b7039
 URL:		http://www.packagekit.org/
 BuildRequires:	GConf2-devel
-BuildRequires:	PackageKit-devel >= 0.2.0
+BuildRequires:	PackageKit-devel >= 0.2.1
 BuildRequires:	PolicyKit-gnome-devel >= 0.8
 BuildRequires:	autoconf >= 2.52
 BuildRequires:	automake
@@ -28,7 +27,7 @@ BuildRequires:	rpmbuild(find_lang) >= 1.23
 BuildRequires:	rpmbuild(macros) >= 1.311
 Requires(post,postun):	gtk+2
 Requires(post,preun):	GConf2
-Requires:	PackageKit >= 0.2.0
+Requires:	PackageKit >= 0.2.1
 Requires:	PolicyKit-gnome >= 0.8
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -39,7 +38,6 @@ removing packages.
 
 %prep
 %setup -q
-%patch0 -p1
 
 %build
 %{__intltoolize}
