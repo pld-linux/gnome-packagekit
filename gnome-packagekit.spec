@@ -1,14 +1,14 @@
 Summary:	GNOME PackageKit Client
 Name:		gnome-packagekit
-Version:	0.2.1
+Version:	0.2.2
 Release:	1
 License:	GPL v2+
 Group:		X11/Applications
-Source0:	http://people.freedesktop.org/~hughsient/releases/%{name}-%{version}.tar.gz
-# Source0-md5:	9e13c842bd2e96b766403c27743b7039
+Source0:	http://www.packagekit.org/releases/%{name}-%{version}.tar.gz
+# Source0-md5:	6985afdf35dcff920afb3c622f632956
 URL:		http://www.packagekit.org/
 BuildRequires:	GConf2-devel
-BuildRequires:	PackageKit-devel >= 0.2.1
+BuildRequires:	PackageKit-devel >= 0.2.2
 BuildRequires:	PolicyKit-gnome-devel >= 0.8
 BuildRequires:	autoconf >= 2.52
 BuildRequires:	automake
@@ -25,9 +25,10 @@ BuildRequires:	libtool
 BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(find_lang) >= 1.23
 BuildRequires:	rpmbuild(macros) >= 1.311
+BuildRequires:	unique-devel >= 0.9.4
 Requires(post,postun):	gtk+2
 Requires(post,preun):	GConf2
-Requires:	PackageKit >= 0.2.1
+Requires:	PackageKit >= 0.2.2
 Requires:	PolicyKit-gnome >= 0.8
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
