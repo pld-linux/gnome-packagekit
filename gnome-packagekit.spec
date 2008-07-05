@@ -1,14 +1,14 @@
 Summary:	GNOME PackageKit Client
 Name:		gnome-packagekit
-Version:	0.2.2
+Version:	0.2.3
 Release:	1
 License:	GPL v2+
 Group:		X11/Applications
 Source0:	http://www.packagekit.org/releases/%{name}-%{version}.tar.gz
-# Source0-md5:	6985afdf35dcff920afb3c622f632956
+# Source0-md5:	eb12e6eea8413d35c033aedee61b89ee
 URL:		http://www.packagekit.org/
 BuildRequires:	GConf2-devel
-BuildRequires:	PackageKit-devel >= 0.2.2
+BuildRequires:	PackageKit-devel >= 0.2.3
 BuildRequires:	PolicyKit-gnome-devel >= 0.8
 BuildRequires:	autoconf >= 2.52
 BuildRequires:	automake
@@ -26,9 +26,10 @@ BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(find_lang) >= 1.23
 BuildRequires:	rpmbuild(macros) >= 1.311
 BuildRequires:	unique-devel >= 0.9.4
+Requires(post,postun):	desktop-file-utils
 Requires(post,postun):	gtk+2
 Requires(post,preun):	GConf2
-Requires:	PackageKit >= 0.2.2
+Requires:	PackageKit >= 0.2.3
 Requires:	PolicyKit-gnome >= 0.8
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -67,18 +68,21 @@ rm -rf $RPM_BUILD_ROOT
 %post
 %gconf_schema_install gnome-packagekit.schemas
 %update_icon_cache hicolor
+%update_desktop_database
 
 %preun
 %gconf_schema_uninstall gnome-packagekit.schemas
 
 %postun
 %update_icon_cache hicolor
+%update_desktop_database_postun
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog COPYING NEWS README
 %attr(755,root,root) %{_bindir}/gpk-application
 %attr(755,root,root) %{_bindir}/gpk-backend-status
+%attr(755,root,root) %{_bindir}/gpk-install-catalog
 %attr(755,root,root) %{_bindir}/gpk-install-local-file
 %attr(755,root,root) %{_bindir}/gpk-install-mime-type
 %attr(755,root,root) %{_bindir}/gpk-install-package-name
@@ -93,6 +97,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/gnome/autostart/gpk-update-icon.desktop
 %{_iconsdir}/hicolor/*/*/*
 %{_desktopdir}/gpk-application.desktop
+%{_desktopdir}/gpk-install-catalog.desktop
 %{_desktopdir}/gpk-install-file.desktop
 %{_desktopdir}/gpk-log.desktop
 %{_desktopdir}/gpk-prefs.desktop
