@@ -1,11 +1,11 @@
 Summary:	GNOME PackageKit Client
 Name:		gnome-packagekit
-Version:	0.3.4
+Version:	0.3.12
 Release:	1
 License:	GPL v2+
 Group:		X11/Applications
 Source0:	http://www.packagekit.org/releases/%{name}-%{version}.tar.gz
-# Source0-md5:	0815795f1bfa275161edc722d7566002
+# Source0-md5:	97545c284c74c974ee0a259af9eaf461
 URL:		http://www.packagekit.org/
 BuildRequires:	GConf2-devel
 BuildRequires:	PackageKit-devel >= 0.3.4
