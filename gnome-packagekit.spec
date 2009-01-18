@@ -1,7 +1,7 @@
 Summary:	GNOME PackageKit Client
 Name:		gnome-packagekit
 Version:	0.3.12
-Release:	1
+Release:	2
 License:	GPL v2+
 Group:		X11/Applications
 Source0:	http://www.packagekit.org/releases/%{name}-%{version}.tar.gz
