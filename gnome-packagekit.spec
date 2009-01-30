@@ -1,15 +1,15 @@
 Summary:	GNOME PackageKit Client
 Summary(pl.UTF-8):	Klient PackageKit dla GNOME
 Name:		gnome-packagekit
-Version:	0.4.0
+Version:	0.4.2
 Release:	1
 License:	GPL v2+
 Group:		X11/Applications
 Source0:	http://www.packagekit.org/releases/%{name}-%{version}.tar.gz
-# Source0-md5:	05f33303e70c9bc8b65073f3b2a76af6
+# Source0-md5:	29e58987ec83b6c233cc346302ad82c4
 URL:		http://www.packagekit.org/
 BuildRequires:	GConf2-devel
-BuildRequires:	PackageKit-devel >= 0.4.0
+BuildRequires:	PackageKit-devel >= 0.4.2
 BuildRequires:	PolicyKit-gnome-devel >= 0.8
 BuildRequires:	autoconf >= 2.52
 BuildRequires:	automake
@@ -32,7 +32,7 @@ BuildRequires:	unique-devel >= 0.9.4
 Requires(post,postun):	desktop-file-utils
 Requires(post,postun):	gtk+2
 Requires(post,preun):	GConf2
-Requires:	PackageKit >= 0.4.0
+Requires:	PackageKit >= 0.4.2
 Requires:	PolicyKit-gnome >= 0.8
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -47,11 +47,12 @@ narzędzi stworzonych do instalacji, aktualizacji i usuwania pakietów.
 
 %prep
 %setup -q
+mkdir m4
 
 %build
 %{__intltoolize}
 %{__libtoolize}
-%{__aclocal}
+%{__aclocal} -I m4
 %{__autoconf}
 %{__autoheader}
 %{__automake}
