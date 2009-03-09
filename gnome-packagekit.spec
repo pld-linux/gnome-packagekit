@@ -1,12 +1,12 @@
 Summary:	GNOME PackageKit Client
 Summary(pl.UTF-8):	Klient PackageKit dla GNOME
 Name:		gnome-packagekit
-Version:	0.4.4
+Version:	0.4.5
 Release:	1
 License:	GPL v2+
 Group:		X11/Applications
 Source0:	http://www.packagekit.org/releases/%{name}-%{version}.tar.gz
-# Source0-md5:	48f9005a49cf59c4212aa6145fbc2f2a
+# Source0-md5:	72bbc0d38a234777a602b3aadda8bb82
 URL:		http://www.packagekit.org/
 BuildRequires:	GConf2-devel
 BuildRequires:	PackageKit-devel >= 0.4.3
@@ -117,6 +117,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/gpk-service-pack
 %attr(755,root,root) %{_bindir}/gpk-update-icon
 %attr(755,root,root) %{_bindir}/gpk-update-viewer
+%attr(755,root,root) %{_bindir}/gpk-update-viewer2
 %{_datadir}/gnome-packagekit
 %{_sysconfdir}/gconf/schemas/gnome-packagekit.schemas
 %{_datadir}/gnome/autostart/gpk-update-icon.desktop
