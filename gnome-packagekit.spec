@@ -7,6 +7,7 @@ License:	GPL v2+
 Group:		X11/Applications
 Source0:	http://www.packagekit.org/releases/%{name}-%{version}.tar.gz
 # Source0-md5:	7a38bcdfda3e712365f674c51565e845
+Patch0:		%{name}-update-viewer-crash.patch
 URL:		http://www.packagekit.org/
 BuildRequires:	GConf2-devel
 BuildRequires:	PackageKit-devel >= 0.4.3
@@ -61,6 +62,7 @@ Ten moduł dostarcza widgety do użycia PackageKit w aplikacjach GTK+.
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 %{__intltoolize}
