@@ -9,7 +9,7 @@ Source0:	http://www.packagekit.org/releases/%{name}-%{version}.tar.gz
 # Source0-md5:	f9811f51567280e13d61547387503303
 URL:		http://www.packagekit.org/
 BuildRequires:	GConf2-devel
-BuildRequires:	PackageKit-devel >= 0.4.3
+BuildRequires:	PackageKit-devel >= 0.4.8
 BuildRequires:	PolicyKit-gnome-devel >= 0.8
 BuildRequires:	autoconf >= 2.52
 BuildRequires:	automake
@@ -31,7 +31,7 @@ BuildRequires:	libunique-devel >= 0.9.4
 Requires(post,postun):	desktop-file-utils
 Requires(post,postun):	gtk+2
 Requires(post,preun):	GConf2
-Requires:	PackageKit >= 0.4.3
+Requires:	PackageKit >= 0.4.8
 Requires:	PolicyKit-gnome >= 0.8
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
