@@ -1,13 +1,12 @@
 Summary:	GNOME PackageKit Client
 Summary(pl.UTF-8):	Klient PackageKit dla GNOME
 Name:		gnome-packagekit
-Version:	2.27.1
-Release:	0.1
+Version:	2.27.2
+Release:	1
 License:	GPL v2+
 Group:		X11/Applications
 Source0:	http://www.packagekit.org/releases/%{name}-%{version}.tar.gz
-# Source0-md5:	7a38bcdfda3e712365f674c51565e845
-Patch0:		%{name}-update-viewer-crash.patch
+# Source0-md5:	f9811f51567280e13d61547387503303
 URL:		http://www.packagekit.org/
 BuildRequires:	GConf2-devel
 BuildRequires:	PackageKit-devel >= 0.4.3
@@ -24,7 +23,6 @@ BuildRequires:	gtk+2-devel >= 2:2.12.8
 BuildRequires:	intltool >= 0.35.0
 BuildRequires:	libglade2-devel >= 1:2.6.2
 BuildRequires:	libnotify-devel >= 0.4.4
-BuildRequires:	libsexy-devel >= 0.1.11
 BuildRequires:	libtool
 BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(find_lang) >= 1.23
@@ -62,9 +60,11 @@ Ten moduł dostarcza widgety do użycia PackageKit w aplikacjach GTK+.
 
 %prep
 %setup -q
-%patch0 -p1
 
 %build
+mkdir m4
+sed -i 's/gpk-xxxxxxxxxxxxx/gpk-application/g' man/gpk-application.sgml
+sed -i 's/gpk-xxxxxxxxxxxxx/gpk-backend-status/g' man/gpk-backend-status.sgml
 %{__intltoolize}
 %{__libtoolize}
 %{__aclocal} -I m4
@@ -118,7 +118,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/gpk-service-pack
 %attr(755,root,root) %{_bindir}/gpk-update-icon
 %attr(755,root,root) %{_bindir}/gpk-update-viewer
-%attr(755,root,root) %{_bindir}/gpk-update-viewer2
 %{_datadir}/gnome-packagekit
 %{_sysconfdir}/gconf/schemas/gnome-packagekit.schemas
 %{_datadir}/gnome/autostart/gpk-update-icon.desktop
@@ -131,6 +130,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_desktopdir}/gpk-repo.desktop
 %{_desktopdir}/gpk-service-pack.desktop
 %{_desktopdir}/gpk-update-viewer.desktop
+%{_mandir}/man1/gpk-application.1*
+%{_mandir}/man1/gpk-backend-status.1*
 %{_mandir}/man1/gpk-install-local-file.1*
 %{_mandir}/man1/gpk-install-mime-type.1*
 %{_mandir}/man1/gpk-install-package-name.1*
