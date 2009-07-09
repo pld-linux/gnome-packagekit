@@ -1,15 +1,15 @@
 Summary:	GNOME PackageKit Client
 Summary(pl.UTF-8):	Klient PackageKit dla GNOME
 Name:		gnome-packagekit
-Version:	2.27.2
+Version:	2.27.3
 Release:	1
 License:	GPL v2+
 Group:		X11/Applications
 Source0:	http://www.packagekit.org/releases/%{name}-%{version}.tar.gz
-# Source0-md5:	f9811f51567280e13d61547387503303
+# Source0-md5:	feb33ccbbed09413189ca62d4a1e8fd5
 URL:		http://www.packagekit.org/
 BuildRequires:	GConf2-devel
-BuildRequires:	PackageKit-devel >= 0.4.8
+BuildRequires:	PackageKit-devel >= 0.5.0
 BuildRequires:	PolicyKit-gnome-devel >= 0.8
 BuildRequires:	autoconf >= 2.52
 BuildRequires:	automake
@@ -62,9 +62,6 @@ Ten moduł dostarcza widgety do użycia PackageKit w aplikacjach GTK+.
 %setup -q
 
 %build
-mkdir m4
-sed -i 's/gpk-xxxxxxxxxxxxx/gpk-application/g' man/gpk-application.sgml
-sed -i 's/gpk-xxxxxxxxxxxxx/gpk-backend-status/g' man/gpk-backend-status.sgml
 %{__intltoolize}
 %{__libtoolize}
 %{__aclocal} -I m4
