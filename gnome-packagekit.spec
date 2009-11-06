@@ -7,6 +7,7 @@ License:	GPL v2+
 Group:		X11/Applications
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/gnome-packagekit/2.28/%{name}-%{version}.tar.bz2
 # Source0-md5:	bfef5e5f8911adbb19b699afb0db4b14
+Patch0:		%{name}-bugfixes.patch
 URL:		http://www.packagekit.org/
 BuildRequires:	DeviceKit-power-devel >= 007
 BuildRequires:	GConf2-devel
@@ -34,6 +35,7 @@ Requires(post,postun):	desktop-file-utils
 Requires(post,postun):	gtk+2
 Requires(post,preun):	GConf2
 Requires:	PackageKit >= 0.5.2
+Requires:	polkit-gnome >= 0.92
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -61,6 +63,7 @@ Ten moduł dostarcza widgety do użycia PackageKit w aplikacjach GTK+.
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 mkdir m4
