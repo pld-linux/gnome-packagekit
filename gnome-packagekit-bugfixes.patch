@@ -1,0 +1,131 @@
+From 13193ec9a319d63d8a8a87f8485fbb526bef3367 Mon Sep 17 00:00:00 2001
+From: Richard Hughes <richard@hughsie.com>
+Date: Tue, 27 Oct 2009 10:00:33 +0000
+Subject: bugfix: don't cache the length of the deps array if we are removing items from it
+
+---
+diff --git a/src/gpk-helper-deps-install.c b/src/gpk-helper-deps-install.c
+index 3f28c40..73076ef 100644
+--- a/src/gpk-helper-deps-install.c
++++ b/src/gpk-helper-deps-install.c
+@@ -72,8 +72,7 @@ gpk_helper_deps_install_show (GpkHelperDepsInstall *helper, PkPackageList *packa
+ 	guint i;
+ 
+ 	/* remove cleanup packages */
+-	length = pk_package_list_get_size (deps_list);
+-	for (i=0; i<length; i++) {
++	for (i=0; i<pk_package_list_get_size (deps_list); i++) {
+ 		obj = pk_package_list_get_obj (deps_list, i);
+ 		if (obj->info == PK_INFO_ENUM_CLEANUP ||
+ 		    obj->info == PK_INFO_ENUM_FINISHED) {
+
+From 8f90b47c029447a179f8a159c51f5c6d7f0febc0 Mon Sep 17 00:00:00 2001
+From: Richard Hughes <richard@hughsie.com>
+Date: Tue, 27 Oct 2009 10:36:03 +0000
+Subject: Always show the search type menu icons. Fixes rh#530595
+
+---
+diff --git a/src/gpk-application.c b/src/gpk-application.c
+index d998679..23f5b04 100644
+--- a/src/gpk-application.c
++++ b/src/gpk-application.c
+@@ -2452,6 +2452,7 @@ gpk_application_entry_text_icon_press_cb (GtkEntry *entry, GtkEntryIconPosition
+ 		item = gtk_image_menu_item_new_with_mnemonic (_("Search by name"));
+ 		image = gtk_image_new_from_stock (GTK_STOCK_FIND, GTK_ICON_SIZE_MENU);
+ 		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
++		gtk_image_menu_item_set_always_show_image (GTK_IMAGE_MENU_ITEM (item), TRUE);
+ 		g_signal_connect (G_OBJECT (item), "activate",
+ 				  G_CALLBACK (gpk_application_menu_search_by_name), application);
+ 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
+@@ -2462,6 +2463,7 @@ gpk_application_entry_text_icon_press_cb (GtkEntry *entry, GtkEntryIconPosition
+ 		item = gtk_image_menu_item_new_with_mnemonic (_("Search by description"));
+ 		image = gtk_image_new_from_stock (GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU);
+ 		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
++		gtk_image_menu_item_set_always_show_image (GTK_IMAGE_MENU_ITEM (item), TRUE);
+ 		g_signal_connect (G_OBJECT (item), "activate",
+ 				  G_CALLBACK (gpk_application_menu_search_by_description), application);
+ 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
+@@ -2472,6 +2474,7 @@ gpk_application_entry_text_icon_press_cb (GtkEntry *entry, GtkEntryIconPosition
+ 		item = gtk_image_menu_item_new_with_mnemonic (_("Search by file name"));
+ 		image = gtk_image_new_from_stock (GTK_STOCK_OPEN, GTK_ICON_SIZE_MENU);
+ 		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
++		gtk_image_menu_item_set_always_show_image (GTK_IMAGE_MENU_ITEM (item), TRUE);
+ 		g_signal_connect (G_OBJECT (item), "activate",
+ 				  G_CALLBACK (gpk_application_menu_search_by_file), application);
+ 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
+
+From 0594707ff7af9d26e25d6f99f1761e39f7282e2e Mon Sep 17 00:00:00 2001
+From: Richard Hughes <richard@hughsie.com>
+Date: Tue, 27 Oct 2009 10:36:58 +0000
+Subject: Remove the original package from the dep-confirmation screen
+
+---
+diff --git a/src/gpk-helper-deps-install.c b/src/gpk-helper-deps-install.c
+index 73076ef..32b0b69 100644
+--- a/src/gpk-helper-deps-install.c
++++ b/src/gpk-helper-deps-install.c
+@@ -69,17 +69,37 @@ gpk_helper_deps_install_show (GpkHelperDepsInstall *helper, PkPackageList *packa
+ 	GtkResponseType response;
+ 	gchar *package_id;
+ 	const PkPackageObj *obj;
+-	guint i;
++	const PkPackageObj *obj_tmp;
++	guint i = 0, j;
+ 
+ 	/* remove cleanup packages */
+-	for (i=0; i<pk_package_list_get_size (deps_list); i++) {
++	while (i<pk_package_list_get_size (deps_list)) {
+ 		obj = pk_package_list_get_obj (deps_list, i);
+ 		if (obj->info == PK_INFO_ENUM_CLEANUP ||
+ 		    obj->info == PK_INFO_ENUM_FINISHED) {
+ 			package_id = pk_package_id_to_string (obj->id);
+ 			pk_package_list_remove (deps_list, package_id);
+ 			g_free (package_id);
++			continue;
+ 		}
++
++		/* remove original packages */
++		ret = FALSE;
++		length = pk_package_list_get_size (packages);
++		for (j=0; j<length; j++) {
++			obj_tmp = pk_package_list_get_obj (packages, j);
++			if (pk_package_id_equal (obj_tmp->id, obj->id)) {
++				package_id = pk_package_id_to_string (obj->id);
++				pk_package_list_remove (deps_list, package_id);
++				g_free (package_id);
++				ret = TRUE;
++			}
++		}
++		if (ret)
++			continue;
++
++		/* only increment if we didn't remove a package */
++		i++;
+ 	}
+ 
+ 	/* empty list */
+
+From aaa707aa3420f2c25697532de9e20b21d50520e6 Mon Sep 17 00:00:00 2001
+From: Marcin Banasiak <megabajt@pld-linux.org>
+Date: Thu, 5 Nov 2009 23:19:48 +0100
+Subject: [PATCH 1/1] bugfix: don't cache the length of the deps array if we are removing items from it
+
+---
+ src/gpk-helper-deps-remove.c |    3 +--
+ 1 files changed, 1 insertions(+), 2 deletions(-)
+
+diff --git a/src/gpk-helper-deps-remove.c b/src/gpk-helper-deps-remove.c
+index a5c2a5d..ebc1947 100644
+--- a/src/gpk-helper-deps-remove.c
++++ b/src/gpk-helper-deps-remove.c
+@@ -69,8 +69,7 @@ gpk_helper_deps_remove_show (GpkHelperDepsRemove *helper, PkPackageList *package
+ 	guint i;
+ 
+ 	/* remove cleanup packages */
+-	length = pk_package_list_get_size (deps_list);
+-	for (i=0; i<length; i++) {
++	for (i=0; i<pk_package_list_get_size (deps_list); i++) {
+ 		obj = pk_package_list_get_obj (deps_list, i);
+ 		if (obj->info == PK_INFO_ENUM_CLEANUP ||
+ 		    obj->info == PK_INFO_ENUM_FINISHED) {
+
