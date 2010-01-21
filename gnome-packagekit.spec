@@ -1,16 +1,16 @@
 Summary:	GNOME PackageKit Client
 Summary(pl.UTF-8):	Klient PackageKit dla GNOME
 Name:		gnome-packagekit
-Version:	2.28.2
+Version:	2.29.2
 Release:	1
 License:	GPL v2+
 Group:		X11/Applications
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/gnome-packagekit/2.28/%{name}-%{version}.tar.bz2
-# Source0-md5:	b0ff9462177cd4432c8f210d68e946d7
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/gnome-packagekit/2.29/%{name}-%{version}.tar.bz2
+# Source0-md5:	fd25c1407b5b351816ec84afba59eddd
 URL:		http://www.packagekit.org/
 BuildRequires:	DeviceKit-power-devel >= 007
 BuildRequires:	GConf2-devel
-BuildRequires:	PackageKit-devel >= 0.5.2
+BuildRequires:	PackageKit-devel >= 0.6.0
 BuildRequires:	autoconf >= 2.52
 BuildRequires:	automake
 BuildRequires:	dbus-devel >= 1.2.0
@@ -33,7 +33,7 @@ BuildRequires:	udev-glib-devel
 Requires(post,postun):	desktop-file-utils
 Requires(post,postun):	gtk+2
 Requires(post,preun):	GConf2
-Requires:	PackageKit >= 0.5.2
+Requires:	PackageKit >= 0.6.0
 Requires:	polkit-gnome >= 0.92
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -107,6 +107,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc AUTHORS ChangeLog COPYING NEWS README
 %attr(755,root,root) %{_bindir}/gpk-application
 %attr(755,root,root) %{_bindir}/gpk-backend-status
+%attr(755,root,root) %{_bindir}/gpk-dbus-service
 %attr(755,root,root) %{_bindir}/gpk-install-catalog
 %attr(755,root,root) %{_bindir}/gpk-install-local-file
 %attr(755,root,root) %{_bindir}/gpk-install-mime-type
@@ -118,6 +119,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/gpk-service-pack
 %attr(755,root,root) %{_bindir}/gpk-update-icon
 %attr(755,root,root) %{_bindir}/gpk-update-viewer
+%{_datadir}/dbus-1/services/org.freedesktop.PackageKit.service
 %{_datadir}/gnome-packagekit
 %{_sysconfdir}/gconf/schemas/gnome-packagekit.schemas
 %{_datadir}/gnome/autostart/gpk-update-icon.desktop
