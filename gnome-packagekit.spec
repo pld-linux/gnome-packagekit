@@ -15,20 +15,22 @@ BuildRequires:	autoconf >= 2.52
 BuildRequires:	automake
 BuildRequires:	dbus-devel >= 1.2.0
 BuildRequires:	dbus-glib-devel >= 0.74
+BuildRequires:	docbook-dtd41-sgml
 BuildRequires:	gettext-devel
 BuildRequires:	gnome-common
 BuildRequires:	gnome-doc-utils
 BuildRequires:	gnome-menus-devel >= 2.24.1
-BuildRequires:	gtk+2-devel >= 2:2.16.0
+BuildRequires:	gtk+2-devel >= 2:2.20.0
 BuildRequires:	gtk-doc >= 1.9
 BuildRequires:	intltool >= 0.35.0
 BuildRequires:	libcanberra-devel >= 0.10
+BuildRequires:	libcanberra-gtk-devel
 BuildRequires:	libnotify-devel >= 0.4.4
 BuildRequires:	libtool
+BuildRequires:	libunique-devel >= 1.0.0
 BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(find_lang) >= 1.23
 BuildRequires:	rpmbuild(macros) >= 1.311
-BuildRequires:	libunique-devel >= 1.0.0
 BuildRequires:	udev-glib-devel
 Requires(post,postun):	desktop-file-utils
 Requires(post,postun):	gtk+2
