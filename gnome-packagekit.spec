@@ -62,6 +62,8 @@ Ten moduł dostarcza widgety do użycia PackageKit w aplikacjach GTK+.
 
 %prep
 %setup -q
+sed -i s#^en@shaw## po/LINGUAS
+rm po/en@shaw.po
 
 %build
 mkdir m4
