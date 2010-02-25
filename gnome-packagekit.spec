@@ -1,17 +1,17 @@
 Summary:	GNOME PackageKit Client
 Summary(pl.UTF-8):	Klient PackageKit dla GNOME
 Name:		gnome-packagekit
-Version:	2.29.2
-Release:	2
+Version:	2.29.3
+Release:	1
 License:	GPL v2+
 Group:		X11/Applications
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/gnome-packagekit/2.29/%{name}-%{version}.tar.bz2
-# Source0-md5:	fd25c1407b5b351816ec84afba59eddd
+# Source0-md5:	40a662d9605f0c4a21ca29bb19db513d
 URL:		http://www.packagekit.org/
 BuildRequires:	DeviceKit-power-devel >= 007
 BuildRequires:	GConf2-devel
 BuildRequires:	PackageKit-devel >= 0.6.0
-BuildRequires:	autoconf >= 2.52
+BuildRequires:	autoconf >= 2.65
 BuildRequires:	automake
 BuildRequires:	dbus-devel >= 1.2.0
 BuildRequires:	dbus-glib-devel >= 0.74
@@ -20,7 +20,7 @@ BuildRequires:	gettext-devel
 BuildRequires:	gnome-common
 BuildRequires:	gnome-doc-utils
 BuildRequires:	gnome-menus-devel >= 2.24.1
-BuildRequires:	gtk+2-devel >= 2:2.20.0
+BuildRequires:	gtk+2-devel >= 2:2.19.4
 BuildRequires:	gtk-doc >= 1.9
 BuildRequires:	intltool >= 0.35.0
 BuildRequires:	libcanberra-devel >= 0.10
