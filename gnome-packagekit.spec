@@ -1,16 +1,16 @@
 Summary:	GNOME PackageKit Client
 Summary(pl.UTF-8):	Klient PackageKit dla GNOME
 Name:		gnome-packagekit
-Version:	2.29.3
-Release:	3
+Version:	2.30.3
+Release:	1
 License:	GPL v2+
 Group:		X11/Applications
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/gnome-packagekit/2.29/%{name}-%{version}.tar.bz2
-# Source0-md5:	40a662d9605f0c4a21ca29bb19db513d
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/gnome-packagekit/2.30/%{name}-%{version}.tar.bz2
+# Source0-md5:	865675fb52f131083e76f97c9a630def
 URL:		http://www.packagekit.org/
 BuildRequires:	DeviceKit-power-devel >= 007
 BuildRequires:	GConf2-devel
-BuildRequires:	PackageKit-devel >= 0.6.0
+BuildRequires:	PackageKit-devel >= 0.6.8
 BuildRequires:	autoconf >= 2.65
 BuildRequires:	automake
 BuildRequires:	dbus-devel >= 1.2.0
@@ -36,7 +36,7 @@ BuildRequires:	udev-glib-devel
 Requires(post,postun):	desktop-file-utils
 Requires(post,postun):	gtk+2
 Requires(post,preun):	GConf2
-Requires:	PackageKit >= 0.6.0
+Requires:	PackageKit >= 0.6.8
 Requires:	polkit-gnome >= 0.92
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -69,7 +69,6 @@ sed -i s#^en@shaw## po/LINGUAS
 rm po/en@shaw.po
 
 %build
-mkdir m4
 %{__intltoolize}
 %{__libtoolize}
 %{__aclocal} -I m4
