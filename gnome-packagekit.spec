@@ -1,12 +1,12 @@
 Summary:	GNOME PackageKit Client
 Summary(pl.UTF-8):	Klient PackageKit dla GNOME
 Name:		gnome-packagekit
-Version:	2.30.3
-Release:	2
+Version:	2.32.0
+Release:	1
 License:	GPL v2+
 Group:		X11/Applications
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/gnome-packagekit/2.30/%{name}-%{version}.tar.bz2
-# Source0-md5:	865675fb52f131083e76f97c9a630def
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/gnome-packagekit/2.32/%{name}-%{version}.tar.bz2
+# Source0-md5:	56a8535ca4e10f6bfaf6092de774859e
 URL:		http://www.packagekit.org/
 BuildRequires:	DeviceKit-power-devel >= 007
 BuildRequires:	GConf2-devel
@@ -20,9 +20,8 @@ BuildRequires:	gettext-devel
 BuildRequires:	gnome-common
 BuildRequires:	gnome-doc-utils
 BuildRequires:	gnome-menus-devel >= 2.24.1
-BuildRequires:	gtk+2-devel >= 2:2.19.4
+BuildRequires:	gtk+2-devel >= 2:2.22.0
 BuildRequires:	gtk-doc >= 1.9
-BuildRequires:	intltool >= 0.35.0
 BuildRequires:	libcanberra-devel >= 0.10
 BuildRequires:	libcanberra-gtk-devel
 BuildRequires:	libnotify-devel >= 0.4.4
@@ -32,9 +31,10 @@ BuildRequires:	pkgconfig
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(find_lang) >= 1.23
 BuildRequires:	rpmbuild(macros) >= 1.311
+BuildRequires:	sed >= 4.0
 BuildRequires:	udev-glib-devel
 Requires(post,postun):	desktop-file-utils
-Requires(post,postun):	gtk+2
+Requires(post,postun):	gtk+2 >= 2:2.22.0
 Requires(post,preun):	GConf2
 Requires:	PackageKit >= 0.6.8
 Requires:	polkit-gnome >= 0.92
@@ -65,13 +65,12 @@ Ten moduł dostarcza widgety do użycia PackageKit w aplikacjach GTK+.
 
 %prep
 %setup -q
-sed -i s#^en@shaw## po/LINGUAS
+%{__sed} -i s#^en@shaw## po/LINGUAS
 rm po/en@shaw.po
 
 %build
-%{__intltoolize}
 %{__libtoolize}
-%{__aclocal} -I m4
+%{__aclocal}
 %{__autoconf}
 %{__autoheader}
 %{__automake}
