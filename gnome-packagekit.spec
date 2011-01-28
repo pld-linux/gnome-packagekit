@@ -22,6 +22,7 @@ BuildRequires:	gnome-doc-utils
 BuildRequires:	gnome-menus-devel >= 2.24.1
 BuildRequires:	gtk+2-devel >= 2:2.22.0
 BuildRequires:	gtk-doc >= 1.9
+BuildRequires:	intltool
 BuildRequires:	libcanberra-devel >= 0.10
 BuildRequires:	libcanberra-gtk-devel
 BuildRequires:	libnotify-devel >= 0.4.4
