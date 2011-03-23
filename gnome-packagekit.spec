@@ -1,43 +1,44 @@
 Summary:	GNOME PackageKit Client
 Summary(pl.UTF-8):	Klient PackageKit dla GNOME
 Name:		gnome-packagekit
-Version:	2.32.0
-Release:	3
+Version:	2.91.92
+Release:	1
 License:	GPL v2+
 Group:		X11/Applications
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/gnome-packagekit/2.32/%{name}-%{version}.tar.bz2
-# Source0-md5:	56a8535ca4e10f6bfaf6092de774859e
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/gnome-packagekit/2.91/%{name}-%{version}.tar.bz2
+# Source0-md5:	30b022428bd854096995d61baefac825
 URL:		http://www.packagekit.org/
-BuildRequires:	DeviceKit-power-devel >= 007
-BuildRequires:	GConf2-devel
 BuildRequires:	PackageKit-devel >= 0.6.8
 BuildRequires:	autoconf >= 2.65
-BuildRequires:	automake
+BuildRequires:	automake >= 1.11
 BuildRequires:	dbus-devel >= 1.2.0
 BuildRequires:	dbus-glib-devel >= 0.74
 BuildRequires:	docbook-dtd41-sgml
+BuildRequires:	fontconfig-devel
 BuildRequires:	gettext-devel
+BuildRequires:	glib2-devel >= 1:2.26.0
 BuildRequires:	gnome-common
 BuildRequires:	gnome-doc-utils
 BuildRequires:	gnome-menus-devel >= 2.24.1
-BuildRequires:	gtk+2-devel >= 2:2.22.0
+BuildRequires:	gtk+3-devel >= 3.0.0
 BuildRequires:	gtk-doc >= 1.9
-BuildRequires:	intltool
+BuildRequires:	intltool >= 0.35.0
 BuildRequires:	libcanberra-devel >= 0.10
-BuildRequires:	libcanberra-gtk-devel
-BuildRequires:	libnotify-devel >= 0.4.4
+BuildRequires:	libcanberra-gtk3-devel >= 0.10
+BuildRequires:	libnotify-devel >= 0.7.0
 BuildRequires:	libtool
-BuildRequires:	libunique-devel >= 1.0.0
+BuildRequires:	libxslt-progs
 BuildRequires:	pkgconfig
+BuildRequires:	python
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(find_lang) >= 1.23
 BuildRequires:	rpmbuild(macros) >= 1.311
-BuildRequires:	sed >= 4.0
 BuildRequires:	udev-glib-devel
+BuildRequires:	upower-devel >= 0.9.0
 Requires(post,postun):	desktop-file-utils
 Requires(post,postun):	gtk-update-icon-cache
 Requires(post,postun):	hicolor-icon-theme
-Requires(post,preun):	GConf2
+Requires(post,preun):	glib2 >= 1:2.26.0
 Requires:	PackageKit >= 0.6.8
 Requires:	polkit-gnome >= 0.92
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -55,7 +56,7 @@ narzędzi stworzonych do instalacji, aktualizacji i usuwania pakietów.
 Summary:	Widgets to use PackageKit in GTK+ applications
 Summary(pl.UTF-8):	Widgety do użycia PackageKit w aplikacjach GTK+
 Group:		Libraries/Python
-Requires:	gnome-packagekit
+Requires:	gnome-packagekit = %{version}-%{release}
 Requires:	python-packagekit
 Requires:	python-pygtk-gtk
 
@@ -67,8 +68,6 @@ Ten moduł dostarcza widgety do użycia PackageKit w aplikacjach GTK+.
 
 %prep
 %setup -q
-%{__sed} -i s#^en@shaw## po/LINGUAS
-rm po/en@shaw.po
 
 %build
 %{__libtoolize}
@@ -77,8 +76,9 @@ rm po/en@shaw.po
 %{__autoheader}
 %{__automake}
 %configure \
+	--disable-silent-rules \
 	--disable-scrollkeeper \
-	--disable-schemas-install
+	--disable-schemas-compile
 
 %{__make}
 
@@ -96,23 +96,21 @@ rm -rf $RPM_BUILD_ROOT
 rm -rf $RPM_BUILD_ROOT
 
 %post
-%gconf_schema_install gnome-packagekit.schemas
 %update_icon_cache hicolor
 %update_desktop_database
-
-%preun
-%gconf_schema_uninstall gnome-packagekit.schemas
+%glib_compile_schemas
 
 %postun
 %update_icon_cache hicolor
 %update_desktop_database_postun
+%glib_compile_schemas
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog COPYING NEWS README
 %attr(755,root,root) %{_bindir}/gpk-application
-%attr(755,root,root) %{_bindir}/gpk-backend-status
 %attr(755,root,root) %{_bindir}/gpk-dbus-service
+%attr(755,root,root) %{_bindir}/gpk-distro-upgrade
 %attr(755,root,root) %{_bindir}/gpk-install-catalog
 %attr(755,root,root) %{_bindir}/gpk-install-local-file
 %attr(755,root,root) %{_bindir}/gpk-install-mime-type
@@ -120,21 +118,20 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/gpk-install-provide-file
 %attr(755,root,root) %{_bindir}/gpk-log
 %attr(755,root,root) %{_bindir}/gpk-prefs
-%attr(755,root,root) %{_bindir}/gpk-repo
 %attr(755,root,root) %{_bindir}/gpk-service-pack
-%attr(755,root,root) %{_bindir}/gpk-update-icon
 %attr(755,root,root) %{_bindir}/gpk-update-viewer
+%{_libdir}/gnome-settings-daemon-3.0/gtk-modules/gpk-pk-gtk-module.desktop
+%{_datadir}/GConf/gsettings/org.gnome.packagekit.gschema.migrate
 %{_datadir}/dbus-1/services/org.freedesktop.PackageKit.service
+%{_datadir}/glib-2.0/schemas/org.gnome.packagekit.gschema.xml
 %{_datadir}/gnome-packagekit
-%{_sysconfdir}/gconf/schemas/gnome-packagekit.schemas
-%{_datadir}/gnome/autostart/gpk-update-icon.desktop
 %{_iconsdir}/hicolor/*/*/*
 %{_desktopdir}/gpk-application.desktop
+%{_desktopdir}/gpk-distro-upgrade.desktop
 %{_desktopdir}/gpk-install-catalog.desktop
-%{_desktopdir}/gpk-install-file.desktop
+%{_desktopdir}/gpk-install-local-file.desktop
 %{_desktopdir}/gpk-log.desktop
 %{_desktopdir}/gpk-prefs.desktop
-%{_desktopdir}/gpk-repo.desktop
 %{_desktopdir}/gpk-service-pack.desktop
 %{_desktopdir}/gpk-update-viewer.desktop
 %{_mandir}/man1/gpk-application.1*
@@ -147,6 +144,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/gpk-repo.1*
 %{_mandir}/man1/gpk-update-icon.1*
 %{_mandir}/man1/gpk-update-viewer.1*
+
+
 
 %files -n python-gnome-packagekit
 %defattr(644,root,root,755)
