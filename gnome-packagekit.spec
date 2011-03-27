@@ -32,7 +32,6 @@ BuildRequires:	pkgconfig
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(find_lang) >= 1.23
 BuildRequires:	rpmbuild(macros) >= 1.311
-BuildRequires:	sed >= 4.0
 BuildRequires:	udev-glib-devel
 Requires(post,postun):	desktop-file-utils
 Requires(post,postun):	gtk-update-icon-cache
@@ -67,8 +66,6 @@ Ten moduł dostarcza widgety do użycia PackageKit w aplikacjach GTK+.
 
 %prep
 %setup -q
-%{__sed} -i s#^en@shaw## po/LINGUAS
-rm po/en@shaw.po
 
 %build
 %{__libtoolize}
