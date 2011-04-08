@@ -145,8 +145,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/gpk-update-icon.1*
 %{_mandir}/man1/gpk-update-viewer.1*
 
-
-
 %files -n python-gnome-packagekit
 %defattr(644,root,root,755)
 %{py_sitescriptdir}/packagekit/*.py[co]
