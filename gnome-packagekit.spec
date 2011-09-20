@@ -1,12 +1,12 @@
 Summary:	GNOME PackageKit Client
 Summary(pl.UTF-8):	Klient PackageKit dla GNOME
 Name:		gnome-packagekit
-Version:	3.1.90
+Version:	3.1.92
 Release:	1
 License:	GPL v2+
 Group:		X11/Applications
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/gnome-packagekit/3.1/%{name}-%{version}.tar.xz
-# Source0-md5:	8131f7545780e3aedb326f4ee455d414
+# Source0-md5:	e2238b371ed5bd99859024bdac1a4cef
 URL:		http://www.packagekit.org/
 BuildRequires:	PackageKit-devel >= 0.6.8
 BuildRequires:	autoconf >= 2.65
