@@ -1,12 +1,12 @@
 Summary:	GNOME PackageKit Client
 Summary(pl.UTF-8):	Klient PackageKit dla GNOME
 Name:		gnome-packagekit
-Version:	3.0.3
+Version:	3.2.0
 Release:	1
 License:	GPL v2+
 Group:		X11/Applications
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/gnome-packagekit/3.0/%{name}-%{version}.tar.bz2
-# Source0-md5:	df13a56adbd97fa018b2cbd10ab5a3e6
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/gnome-packagekit/3.2/%{name}-%{version}.tar.xz
+# Source0-md5:	fdf4404e8f45eab05b6320ace68e2c16
 URL:		http://www.packagekit.org/
 BuildRequires:	PackageKit-devel >= 0.6.8
 BuildRequires:	autoconf >= 2.65
@@ -14,12 +14,12 @@ BuildRequires:	automake >= 1.11
 BuildRequires:	dbus-devel >= 1.2.0
 BuildRequires:	dbus-glib-devel >= 0.74
 BuildRequires:	docbook-dtd41-sgml
+BuildRequires:	docbook-utils
 BuildRequires:	fontconfig-devel
 BuildRequires:	gettext-devel
 BuildRequires:	glib2-devel >= 1:2.26.0
 BuildRequires:	gnome-common
 BuildRequires:	gnome-doc-utils
-BuildRequires:	gnome-menus-devel >= 2.24.1
 BuildRequires:	gtk+3-devel >= 3.0.0
 BuildRequires:	gtk-doc >= 1.9
 BuildRequires:	intltool >= 0.35.0
@@ -35,6 +35,7 @@ BuildRequires:	rpmbuild(find_lang) >= 1.23
 BuildRequires:	rpmbuild(macros) >= 1.311
 BuildRequires:	udev-glib-devel
 BuildRequires:	upower-devel >= 0.9.0
+BuildRequires:	xorg-lib-libX11-devel
 Requires(post,postun):	desktop-file-utils
 Requires(post,postun):	gtk-update-icon-cache
 Requires(post,postun):	hicolor-icon-theme
@@ -127,6 +128,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/gnome-packagekit
 %{_iconsdir}/hicolor/*/*/*
 %{_desktopdir}/gpk-application.desktop
+%{_desktopdir}/gpk-dbus-service.desktop
 %{_desktopdir}/gpk-distro-upgrade.desktop
 %{_desktopdir}/gpk-install-catalog.desktop
 %{_desktopdir}/gpk-install-local-file.desktop
