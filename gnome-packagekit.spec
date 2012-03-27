@@ -1,12 +1,16 @@
+#
+# Conditional build:
+%bcond_with systemd # rely on systemd for session tracking instead of ConsoleKit
+#
 Summary:	GNOME PackageKit Client
 Summary(pl.UTF-8):	Klient PackageKit dla GNOME
 Name:		gnome-packagekit
-Version:	3.2.1
+Version:	3.4.0
 Release:	1
 License:	GPL v2+
 Group:		X11/Applications
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/gnome-packagekit/3.2/%{name}-%{version}.tar.xz
-# Source0-md5:	2c4f10fd62f3b18041bc7f633132f86d
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/gnome-packagekit/3.4/%{name}-%{version}.tar.xz
+# Source0-md5:	0ed5e9ada5088ea26e62686b686b90eb
 URL:		http://www.packagekit.org/
 BuildRequires:	PackageKit-devel >= 0.6.8
 BuildRequires:	autoconf >= 2.65
@@ -33,6 +37,7 @@ BuildRequires:	python
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(find_lang) >= 1.23
 BuildRequires:	rpmbuild(macros) >= 1.311
+%{?with_systemd:BuildRequires:  systemd-devel}
 BuildRequires:	udev-glib-devel
 BuildRequires:	upower-devel >= 0.9.0
 BuildRequires:	xorg-lib-libX11-devel
@@ -79,6 +84,7 @@ Ten moduł dostarcza widgety do użycia PackageKit w aplikacjach GTK+.
 %configure \
 	--disable-silent-rules \
 	--disable-scrollkeeper \
+	%{__enable_disable systemd systemd} \
 	--disable-schemas-compile
 
 %{__make}
@@ -121,7 +127,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/gpk-prefs
 %attr(755,root,root) %{_bindir}/gpk-service-pack
 %attr(755,root,root) %{_bindir}/gpk-update-viewer
-%{_libdir}/gnome-settings-daemon-3.0/gtk-modules/gpk-pk-gtk-module.desktop
 %{_datadir}/GConf/gsettings/org.gnome.packagekit.gschema.migrate
 %{_datadir}/dbus-1/services/org.freedesktop.PackageKit.service
 %{_datadir}/glib-2.0/schemas/org.gnome.packagekit.gschema.xml
