@@ -5,12 +5,12 @@
 Summary:	GNOME PackageKit Client
 Summary(pl.UTF-8):	Klient PackageKit dla GNOME
 Name:		gnome-packagekit
-Version:	3.4.0
+Version:	3.4.2
 Release:	1
 License:	GPL v2+
 Group:		X11/Applications
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/gnome-packagekit/3.4/%{name}-%{version}.tar.xz
-# Source0-md5:	0ed5e9ada5088ea26e62686b686b90eb
+# Source0-md5:	17530fef9e92c15e2f0624fbe7511ce0
 URL:		http://www.packagekit.org/
 BuildRequires:	PackageKit-devel >= 0.6.8
 BuildRequires:	autoconf >= 2.65
