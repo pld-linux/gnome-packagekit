@@ -1,0 +1,215 @@
+diff -urN gnome-packagekit-3.6.0/configure.ac gnome-packagekit-3.6.0.new/configure.ac
+--- gnome-packagekit-3.6.0/configure.ac	2012-09-25 16:19:50.000000000 +0200
++++ gnome-packagekit-3.6.0.new/configure.ac	2012-10-09 13:56:53.458180536 +0200
+@@ -146,7 +146,7 @@
+               [with_systemd=auto])
+ 
+ PKG_CHECK_MODULES(SYSTEMD,
+-                  [libsystemd-login polkit-gobject-1],
++                  [libsystemd-daemon libsystemd-login polkit-gobject-1],
+                   [have_systemd=yes], [have_systemd=no])
+ 
+ AC_MSG_CHECKING([whether to use systemd])
+diff -urN gnome-packagekit-3.6.0/src/gpk-distro-upgrade.c gnome-packagekit-3.6.0.new/src/gpk-distro-upgrade.c
+--- gnome-packagekit-3.6.0/src/gpk-distro-upgrade.c	2012-06-26 12:18:11.000000000 +0200
++++ gnome-packagekit-3.6.0.new/src/gpk-distro-upgrade.c	2012-10-09 14:08:20.213457912 +0200
+@@ -27,10 +27,10 @@
+ #include <packagekit-glib2/packagekit.h>
+ 
+ #ifdef HAVE_SYSTEMD
++#include <systemd/sd-daemon.h>
+ #include "systemd-proxy.h"
+-#else
+-#include "egg-console-kit.h"
+ #endif
++#include "egg-console-kit.h"
+ 
+ #include "gpk-animated-icon.h"
+ #include "gpk-common.h"
+@@ -47,9 +47,8 @@
+ typedef struct {
+ #ifdef HAVE_SYSTEMD
+         SystemdProxy    *systemd_proxy;
+-#else
+-	EggConsoleKit	*console_kit;
+ #endif
++	EggConsoleKit	*console_kit;
+ 	GCancellable	*cancellable;
+ 	GtkListStore	*distro_upgrade_store;
+ 	GtkWidget	*assistant;
+@@ -118,10 +117,12 @@
+ 	/* restart */
+ 	if (response_id == GTK_RESPONSE_OK) {
+ #ifdef HAVE_SYSTEMD
+-                ret = systemd_proxy_restart (priv->systemd_proxy, &error);
+-#else
+-		ret = egg_console_kit_restart (priv->console_kit, &error);
++		if (priv->systemd_proxy != NULL)
++            		ret = systemd_proxy_restart (priv->systemd_proxy, &error);
++		else
+ #endif
++			ret = egg_console_kit_restart (priv->console_kit, &error);
++
+ 		if (!ret) {
+ 			g_warning ("Cannot restart: %s", error->message);
+ 			g_error_free (error);
+@@ -178,11 +179,13 @@
+ 						  _("Make sure you have saved any unsaved work before restarting."));
+ 
+ #ifdef HAVE_SYSTEMD
+-        ret = systemd_proxy_can_restart (priv->systemd_proxy, &can_restart, &error);
+-#else
+-	/* check with ConsoleKit we can restart */
+-	ret = egg_console_kit_can_restart (priv->console_kit, &can_restart, &error);
++	if (priv->systemd_proxy != NULL)
++    		ret = systemd_proxy_can_restart (priv->systemd_proxy, &can_restart, &error);
++    	else
+ #endif
++		/* check with ConsoleKit we can restart */
++		ret = egg_console_kit_can_restart (priv->console_kit, &can_restart, &error);
++
+ 	if (!ret) {
+ 		g_warning ("cannot get consolekit CanRestart data: %s", error->message);
+ 		g_error_free (error);
+@@ -768,10 +771,12 @@
+ 	gtk_init (&argc, &argv);
+ 	priv = g_new0 (GpkDistroUpgradePrivate, 1);
+ #ifdef HAVE_SYSTEMD
+-        priv->systemd_proxy = systemd_proxy_new ();
+-#else
+-	priv->console_kit = egg_console_kit_new ();
++	if (sd_booted () > 0)
++    		priv->systemd_proxy = systemd_proxy_new ();
++    	else
+ #endif
++		priv->console_kit = egg_console_kit_new ();
++
+ 	priv->cancellable = g_cancellable_new ();
+ 	priv->client = pk_client_new ();
+ 	g_object_set (priv->client,
+@@ -807,10 +812,12 @@
+ 	g_object_unref (priv->cancellable);
+ 	g_object_unref (priv->client);
+ #ifdef HAVE_SYSTEMD
+-        systemd_proxy_free (priv->systemd_proxy);
+-#else
+-	g_object_unref (priv->console_kit);
++	if (priv->systemd_proxy != NULL)
++    		systemd_proxy_free (priv->systemd_proxy);
++    	else
+ #endif
++		g_object_unref (priv->console_kit);
++
+ 	g_free (priv);
+         if (application)
+                 g_object_unref (application);
+diff -urN gnome-packagekit-3.6.0/src/gpk-update-viewer.c gnome-packagekit-3.6.0.new/src/gpk-update-viewer.c
+--- gnome-packagekit-3.6.0/src/gpk-update-viewer.c	2012-07-12 10:01:38.000000000 +0200
++++ gnome-packagekit-3.6.0.new/src/gpk-update-viewer.c	2012-10-09 14:03:49.276526624 +0200
+@@ -33,10 +33,10 @@
+ #include "egg-string.h"
+ #include "egg-markdown.h"
+ #ifdef HAVE_SYSTEMD
++#include <systemd/sd-daemon.h>
+ #include "systemd-proxy.h"
+-#else
+-#include "egg-console-kit.h"
+ #endif
++#include "egg-console-kit.h"
+ 
+ #include "gpk-cell-renderer-info.h"
+ #include "gpk-cell-renderer-restart.h"
+@@ -63,9 +63,8 @@
+ static	PkRestartEnum		 restart_worst = 0;
+ #ifdef HAVE_SYSTEMD
+ static  SystemdProxy            *proxy = NULL;
+-#else
+-static	EggConsoleKit		*console = NULL;
+ #endif
++static	EggConsoleKit		*console = NULL;
+ static	EggMarkdown		*markdown = NULL;
+ static	GCancellable		*cancellable = NULL;
+ static	GSettings		*settings = NULL;
+@@ -249,10 +248,11 @@
+ 	if (restart_update == PK_RESTART_ENUM_SYSTEM ||
+ 	    restart_update == PK_RESTART_ENUM_SECURITY_SYSTEM) {
+ #ifdef HAVE_SYSTEMD
+-                systemd_proxy_can_restart (proxy, &show_button, NULL);
+-#else
+-		egg_console_kit_can_restart (console, &show_button, NULL);
++		if (proxy != NULL)
++            		systemd_proxy_can_restart (proxy, &show_button, NULL);
++            	else
+ #endif
++			egg_console_kit_can_restart (console, &show_button, NULL);
+ 	}
+ 
+ 	/* only show the button if we can do the action */
+@@ -273,11 +273,13 @@
+ 	/* do the action */
+ 	if (restart_update == PK_RESTART_ENUM_SYSTEM)
+ #ifdef HAVE_SYSTEMD
+-                ret = systemd_proxy_restart (proxy, &error);
+-#else
+-		/* use consolekit to restart */
+-		ret = egg_console_kit_restart (console, &error);
++		if (proxy != NULL)
++            		ret = systemd_proxy_restart (proxy, &error);
++            	else
+ #endif
++			/* use consolekit to restart */
++			ret = egg_console_kit_restart (console, &error);
++
+ 		if (!ret) {
+ 			/* TRANSLATORS: the PackageKit request did not complete, and it did not send an error */
+ 			gpk_update_viewer_error_dialog (_("Could not restart"), NULL, error->message);
+@@ -3238,10 +3240,12 @@
+ 
+ 	settings = g_settings_new (GPK_SETTINGS_SCHEMA);
+ #ifdef HAVE_SYSTEMD
+-        proxy = systemd_proxy_new ();
+-#else
+-	console = egg_console_kit_new ();
++	if (sd_booted () > 0)
++    		proxy = systemd_proxy_new ();
++    	else
+ #endif
++		console = egg_console_kit_new ();
++
+ 	cancellable = g_cancellable_new ();
+ 	markdown = egg_markdown_new ();
+ 	egg_markdown_set_output (markdown, EGG_MARKDOWN_OUTPUT_PANGO);
+@@ -3484,10 +3488,9 @@
+ #ifdef HAVE_SYSTEMD
+         if (proxy != NULL)
+                 systemd_proxy_free (proxy);
+-#else
++#endif
+ 	if (console != NULL)
+ 		g_object_unref (console);
+-#endif
+ 	if (control != NULL)
+ 		g_object_unref (control);
+ 	if (settings != NULL)
+diff -urN gnome-packagekit-3.6.0/src/Makefile.am gnome-packagekit-3.6.0.new/src/Makefile.am
+--- gnome-packagekit-3.6.0/src/Makefile.am	2012-05-15 14:44:47.000000000 +0200
++++ gnome-packagekit-3.6.0.new/src/Makefile.am	2012-10-09 13:59:32.313986610 +0200
+@@ -87,16 +87,14 @@
+ 	gpk-task.h					\
+ 	gpk-error.c					\
+ 	gpk-error.h					\
++	egg-console-kit.c				\
++	egg-console-kit.h				\
+ 	$(NULL)
+ 
+ if WITH_SYSTEMD
+ libgpkshared_a_SOURCES +=				\
+ 	systemd-proxy.c					\
+ 	systemd-proxy.h
+-else
+-libgpkshared_a_SOURCES +=				\
+-	egg-console-kit.c				\
+-	egg-console-kit.h
+ endif
+ 
+ shared_LIBS =						\

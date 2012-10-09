@@ -1,18 +1,19 @@
 #
 # Conditional build:
-%bcond_with systemd # rely on systemd for session tracking instead of ConsoleKit
+%bcond_without	systemd # rely on systemd for session tracking instead of ConsoleKit
 #
 Summary:	GNOME PackageKit Client
 Summary(pl.UTF-8):	Klient PackageKit dla GNOME
 Name:		gnome-packagekit
-Version:	3.4.2
+Version:	3.6.0
 Release:	1
 License:	GPL v2+
 Group:		X11/Applications
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/gnome-packagekit/3.4/%{name}-%{version}.tar.xz
-# Source0-md5:	17530fef9e92c15e2f0624fbe7511ce0
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/gnome-packagekit/3.6/%{name}-%{version}.tar.xz
+# Source0-md5:	2685da556fe71b18a782ebcb71466a9c
+Patch0:		systemd-fallback.patch
 URL:		http://www.packagekit.org/
-BuildRequires:	PackageKit-devel >= 0.6.8
+BuildRequires:	PackageKit-devel >= 0.8.0
 BuildRequires:	autoconf >= 2.65
 BuildRequires:	automake >= 1.11
 BuildRequires:	dbus-devel >= 1.2.0
@@ -21,7 +22,7 @@ BuildRequires:	docbook-dtd41-sgml
 BuildRequires:	docbook-utils
 BuildRequires:	fontconfig-devel
 BuildRequires:	gettext-devel
-BuildRequires:	glib2-devel >= 1:2.26.0
+BuildRequires:	glib2-devel >= 1:2.32.0
 BuildRequires:	gnome-common
 BuildRequires:	gnome-doc-utils
 BuildRequires:	gtk+3-devel >= 3.0.0
@@ -33,6 +34,7 @@ BuildRequires:	libnotify-devel >= 0.7.0
 BuildRequires:	libtool
 BuildRequires:	libxslt-progs
 BuildRequires:	pkgconfig
+BuildRequires:	polkit-devel
 BuildRequires:	python
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(find_lang) >= 1.23
@@ -41,11 +43,12 @@ BuildRequires:	rpmbuild(macros) >= 1.311
 BuildRequires:	udev-glib-devel
 BuildRequires:	upower-devel >= 0.9.0
 BuildRequires:	xorg-lib-libX11-devel
+BuildRequires:	yelp-tools
 Requires(post,postun):	desktop-file-utils
 Requires(post,postun):	gtk-update-icon-cache
 Requires(post,postun):	hicolor-icon-theme
 Requires(post,preun):	glib2 >= 1:2.26.0
-Requires:	PackageKit >= 0.6.8
+Requires:	PackageKit >= 0.8.0
 Requires:	polkit-gnome >= 0.92
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -74,6 +77,7 @@ Ten moduł dostarcza widgety do użycia PackageKit w aplikacjach GTK+.
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 %{__libtoolize}
@@ -83,7 +87,6 @@ Ten moduł dostarcza widgety do użycia PackageKit w aplikacjach GTK+.
 %{__automake}
 %configure \
 	--disable-silent-rules \
-	--disable-scrollkeeper \
 	%{__enable_disable systemd systemd} \
 	--disable-schemas-compile
 
