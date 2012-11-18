@@ -5,12 +5,12 @@
 Summary:	GNOME PackageKit Client
 Summary(pl.UTF-8):	Klient PackageKit dla GNOME
 Name:		gnome-packagekit
-Version:	3.6.0
+Version:	3.6.1
 Release:	1
 License:	GPL v2+
 Group:		X11/Applications
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/gnome-packagekit/3.6/%{name}-%{version}.tar.xz
-# Source0-md5:	2685da556fe71b18a782ebcb71466a9c
+# Source0-md5:	a4467f482ffb77ae9b2650d25970583f
 Patch0:		systemd-fallback.patch
 URL:		http://www.packagekit.org/
 BuildRequires:	PackageKit-devel >= 0.8.0
