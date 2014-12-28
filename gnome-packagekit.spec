@@ -21,7 +21,7 @@ BuildRequires:	dbus-glib-devel >= 0.74
 BuildRequires:	docbook-dtd41-sgml
 BuildRequires:	docbook-utils
 BuildRequires:	fontconfig-devel
-BuildRequires:	gettext-devel
+BuildRequires:	gettext-tools
 BuildRequires:	glib2-devel >= 1:2.32.0
 BuildRequires:	gnome-common
 BuildRequires:	gnome-doc-utils
