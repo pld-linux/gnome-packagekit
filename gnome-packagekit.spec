@@ -5,12 +5,12 @@
 Summary:	GNOME PackageKit Client
 Summary(pl.UTF-8):	Klient PackageKit dla GNOME
 Name:		gnome-packagekit
-Version:	3.6.1
+Version:	3.14.2
 Release:	1
 License:	GPL v2+
 Group:		X11/Applications
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/gnome-packagekit/3.6/%{name}-%{version}.tar.xz
-# Source0-md5:	a4467f482ffb77ae9b2650d25970583f
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/gnome-packagekit/3.14/%{name}-%{version}.tar.xz
+# Source0-md5:	a503defd4d21203407e2f2c6d92928b4
 Patch0:		systemd-fallback.patch
 URL:		http://www.packagekit.org/
 BuildRequires:	PackageKit-devel >= 0.8.0
@@ -61,20 +61,6 @@ removing packages.
 Ten pakiet dostarcza aplikacje sesji dla API PackageKit. Zawiera kilka
 narzędzi stworzonych do instalacji, aktualizacji i usuwania pakietów.
 
-%package -n python-gnome-packagekit
-Summary:	Widgets to use PackageKit in GTK+ applications
-Summary(pl.UTF-8):	Widgety do użycia PackageKit w aplikacjach GTK+
-Group:		Libraries/Python
-Requires:	gnome-packagekit = %{version}-%{release}
-Requires:	python-packagekit
-Requires:	python-pygtk-gtk
-
-%description -n python-gnome-packagekit
-This module provides widgets to use PackageKit in GTK+ applications.
-
-%description -n python-gnome-packagekit -l pl.UTF-8
-Ten moduł dostarcza widgety do użycia PackageKit w aplikacjach GTK+.
-
 %prep
 %setup -q
 %patch0 -p1
@@ -120,16 +106,12 @@ rm -rf $RPM_BUILD_ROOT
 %doc AUTHORS ChangeLog COPYING NEWS README
 %attr(755,root,root) %{_bindir}/gpk-application
 %attr(755,root,root) %{_bindir}/gpk-dbus-service
-%attr(755,root,root) %{_bindir}/gpk-distro-upgrade
-%attr(755,root,root) %{_bindir}/gpk-install-catalog
 %attr(755,root,root) %{_bindir}/gpk-install-local-file
-%attr(755,root,root) %{_bindir}/gpk-install-mime-type
-%attr(755,root,root) %{_bindir}/gpk-install-package-name
-%attr(755,root,root) %{_bindir}/gpk-install-provide-file
 %attr(755,root,root) %{_bindir}/gpk-log
 %attr(755,root,root) %{_bindir}/gpk-prefs
-%attr(755,root,root) %{_bindir}/gpk-service-pack
 %attr(755,root,root) %{_bindir}/gpk-update-viewer
+%{_datadir}/appdata/gpk-application.appdata.xml
+%{_datadir}/appdata/gpk-update-viewer.appdata.xml
 %{_datadir}/GConf/gsettings/org.gnome.packagekit.gschema.migrate
 %{_datadir}/dbus-1/services/org.freedesktop.PackageKit.service
 %{_datadir}/glib-2.0/schemas/org.gnome.packagekit.gschema.xml
@@ -137,24 +119,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_iconsdir}/hicolor/*/*/*
 %{_desktopdir}/gpk-application.desktop
 %{_desktopdir}/gpk-dbus-service.desktop
-%{_desktopdir}/gpk-distro-upgrade.desktop
-%{_desktopdir}/gpk-install-catalog.desktop
 %{_desktopdir}/gpk-install-local-file.desktop
 %{_desktopdir}/gpk-log.desktop
 %{_desktopdir}/gpk-prefs.desktop
-%{_desktopdir}/gpk-service-pack.desktop
 %{_desktopdir}/gpk-update-viewer.desktop
 %{_mandir}/man1/gpk-application.1*
-%{_mandir}/man1/gpk-backend-status.1*
+%{_mandir}/man1/gpk-dbus-service.1*
 %{_mandir}/man1/gpk-install-local-file.1*
-%{_mandir}/man1/gpk-install-mime-type.1*
-%{_mandir}/man1/gpk-install-package-name.1*
-%{_mandir}/man1/gpk-install-provide-file.1*
+%{_mandir}/man1/gpk-log.1*
 %{_mandir}/man1/gpk-prefs.1*
-%{_mandir}/man1/gpk-repo.1*
-%{_mandir}/man1/gpk-update-icon.1*
 %{_mandir}/man1/gpk-update-viewer.1*
-
-%files -n python-gnome-packagekit
-%defattr(644,root,root,755)
-%{py_sitescriptdir}/packagekit/*.py[co]
