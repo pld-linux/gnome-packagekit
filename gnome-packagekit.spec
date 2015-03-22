@@ -35,8 +35,6 @@ BuildRequires:	libtool
 BuildRequires:	libxslt-progs
 BuildRequires:	pkgconfig
 BuildRequires:	polkit-devel
-BuildRequires:	python
-BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(find_lang) >= 1.23
 BuildRequires:	rpmbuild(macros) >= 1.311
 %{?with_systemd:BuildRequires:  systemd-devel}
