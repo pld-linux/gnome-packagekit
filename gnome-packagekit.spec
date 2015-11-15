@@ -1,19 +1,20 @@
 #
 # Conditional build:
-%bcond_without	systemd # rely on systemd for session tracking instead of ConsoleKit
+%bcond_without	systemd	# rely on systemd for session tracking instead of ConsoleKit
 #
 Summary:	GNOME PackageKit Client
 Summary(pl.UTF-8):	Klient PackageKit dla GNOME
 Name:		gnome-packagekit
-Version:	3.14.2
+Version:	3.18.0
 Release:	1
 License:	GPL v2+
 Group:		X11/Applications
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/gnome-packagekit/3.14/%{name}-%{version}.tar.xz
-# Source0-md5:	a503defd4d21203407e2f2c6d92928b4
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/gnome-packagekit/3.18/%{name}-%{version}.tar.xz
+# Source0-md5:	e24d383b4bcaeb642b0082600ae417b0
 Patch0:		systemd-fallback.patch
 URL:		http://www.packagekit.org/
 BuildRequires:	PackageKit-devel >= 0.8.0
+BuildRequires:	appstream-glib-devel
 BuildRequires:	autoconf >= 2.65
 BuildRequires:	automake >= 1.11
 BuildRequires:	dbus-devel >= 1.2.0
@@ -24,14 +25,13 @@ BuildRequires:	fontconfig-devel
 BuildRequires:	gettext-tools
 BuildRequires:	glib2-devel >= 1:2.32.0
 BuildRequires:	gnome-common
-BuildRequires:	gnome-doc-utils
-BuildRequires:	gtk+3-devel >= 3.0.0
+BuildRequires:	gtk+3-devel >= 3.15.3
 BuildRequires:	gtk-doc >= 1.9
 BuildRequires:	intltool >= 0.35.0
 BuildRequires:	libcanberra-devel >= 0.10
 BuildRequires:	libcanberra-gtk3-devel >= 0.10
 BuildRequires:	libnotify-devel >= 0.7.0
-BuildRequires:	libtool
+BuildRequires:	libtool >= 2:2
 BuildRequires:	libxslt-progs
 BuildRequires:	pkgconfig
 BuildRequires:	polkit-devel
@@ -45,8 +45,10 @@ BuildRequires:	yelp-tools
 Requires(post,postun):	desktop-file-utils
 Requires(post,postun):	gtk-update-icon-cache
 Requires(post,postun):	hicolor-icon-theme
-Requires(post,preun):	glib2 >= 1:2.26.0
+Requires(post,preun):	glib2 >= 1:2.32.0
 Requires:	PackageKit >= 0.8.0
+Requires:	glib2 >= 1:2.32.0
+Requires:	gtk+3 >= 3.15.3
 Requires:	polkit-gnome >= 0.92
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -103,27 +105,27 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog COPYING NEWS README
 %attr(755,root,root) %{_bindir}/gpk-application
-%attr(755,root,root) %{_bindir}/gpk-dbus-service
-%attr(755,root,root) %{_bindir}/gpk-install-local-file
 %attr(755,root,root) %{_bindir}/gpk-log
 %attr(755,root,root) %{_bindir}/gpk-prefs
 %attr(755,root,root) %{_bindir}/gpk-update-viewer
+%{_datadir}/GConf/gsettings/org.gnome.packagekit.gschema.migrate
 %{_datadir}/appdata/gpk-application.appdata.xml
 %{_datadir}/appdata/gpk-update-viewer.appdata.xml
-%{_datadir}/GConf/gsettings/org.gnome.packagekit.gschema.migrate
-%{_datadir}/dbus-1/services/org.freedesktop.PackageKit.service
 %{_datadir}/glib-2.0/schemas/org.gnome.packagekit.gschema.xml
 %{_datadir}/gnome-packagekit
-%{_iconsdir}/hicolor/*/*/*
+%{_iconsdir}/hicolor/*x*/apps/gpk-*.png
+# terminating "*" is a workaround for rpm glob failing to glob dirs with symlinks dead at build time
+%{_iconsdir}/hicolor/*x*/mimetypes/application-x-catalog.png*
+%{_iconsdir}/hicolor/*x*/mimetypes/application-x-package-list.png*
+%{_iconsdir}/hicolor/scalable/apps/gpk-*.svg
+%{_iconsdir}/hicolor/scalable/mimetypes/application-x-catalog.svg
+%{_iconsdir}/hicolor/scalable/mimetypes/application-x-package-list.svg
 %{_desktopdir}/gpk-application.desktop
-%{_desktopdir}/gpk-dbus-service.desktop
 %{_desktopdir}/gpk-install-local-file.desktop
 %{_desktopdir}/gpk-log.desktop
 %{_desktopdir}/gpk-prefs.desktop
 %{_desktopdir}/gpk-update-viewer.desktop
 %{_mandir}/man1/gpk-application.1*
-%{_mandir}/man1/gpk-dbus-service.1*
-%{_mandir}/man1/gpk-install-local-file.1*
 %{_mandir}/man1/gpk-log.1*
 %{_mandir}/man1/gpk-prefs.1*
 %{_mandir}/man1/gpk-update-viewer.1*
