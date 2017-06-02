@@ -5,15 +5,15 @@
 Summary:	GNOME PackageKit Client
 Summary(pl.UTF-8):	Klient PackageKit dla GNOME
 Name:		gnome-packagekit
-Version:	3.18.0
+Version:	3.24.0
 Release:	1
 License:	GPL v2+
 Group:		X11/Applications
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/gnome-packagekit/3.18/%{name}-%{version}.tar.xz
-# Source0-md5:	e24d383b4bcaeb642b0082600ae417b0
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/gnome-packagekit/3.24/%{name}-%{version}.tar.xz
+# Source0-md5:	fb460341360b91977eeba35c8e38d3ba
 Patch0:		systemd-fallback.patch
 URL:		http://www.packagekit.org/
-BuildRequires:	PackageKit-devel >= 0.8.0
+BuildRequires:	PackageKit-devel >= 0.9.1
 BuildRequires:	appstream-glib-devel
 BuildRequires:	autoconf >= 2.65
 BuildRequires:	automake >= 1.11
@@ -22,7 +22,7 @@ BuildRequires:	dbus-glib-devel >= 0.74
 BuildRequires:	docbook-dtd41-sgml
 BuildRequires:	docbook-utils
 BuildRequires:	fontconfig-devel
-BuildRequires:	gettext-tools
+BuildRequires:	gettext-tools >= 0.19.7
 BuildRequires:	glib2-devel >= 1:2.32.0
 BuildRequires:	gnome-common
 BuildRequires:	gtk+3-devel >= 3.15.3
@@ -46,7 +46,7 @@ Requires(post,postun):	desktop-file-utils
 Requires(post,postun):	gtk-update-icon-cache
 Requires(post,postun):	hicolor-icon-theme
 Requires(post,preun):	glib2 >= 1:2.32.0
-Requires:	PackageKit >= 0.8.0
+Requires:	PackageKit >= 0.9.1
 Requires:	glib2 >= 1:2.32.0
 Requires:	gtk+3 >= 3.15.3
 Requires:	polkit-gnome >= 0.92
@@ -109,10 +109,10 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/gpk-prefs
 %attr(755,root,root) %{_bindir}/gpk-update-viewer
 %{_datadir}/GConf/gsettings/org.gnome.packagekit.gschema.migrate
-%{_datadir}/appdata/gpk-application.appdata.xml
-%{_datadir}/appdata/gpk-update-viewer.appdata.xml
 %{_datadir}/glib-2.0/schemas/org.gnome.packagekit.gschema.xml
 %{_datadir}/gnome-packagekit
+%{_datadir}/metainfo/org.gnome.PackageUpdater.appdata.xml
+%{_datadir}/metainfo/org.gnome.Packages.appdata.xml
 %{_iconsdir}/hicolor/*x*/apps/gpk-*.png
 # terminating "*" is a workaround for rpm glob failing to glob dirs with symlinks dead at build time
 %{_iconsdir}/hicolor/*x*/mimetypes/application-x-catalog.png*
@@ -120,11 +120,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_iconsdir}/hicolor/scalable/apps/gpk-*.svg
 %{_iconsdir}/hicolor/scalable/mimetypes/application-x-catalog.svg
 %{_iconsdir}/hicolor/scalable/mimetypes/application-x-package-list.svg
-%{_desktopdir}/gpk-application.desktop
 %{_desktopdir}/gpk-install-local-file.desktop
 %{_desktopdir}/gpk-log.desktop
 %{_desktopdir}/gpk-prefs.desktop
-%{_desktopdir}/gpk-update-viewer.desktop
+%{_desktopdir}/org.gnome.PackageUpdater.desktop
+%{_desktopdir}/org.gnome.Packages.desktop
 %{_mandir}/man1/gpk-application.1*
 %{_mandir}/man1/gpk-log.1*
 %{_mandir}/man1/gpk-prefs.1*

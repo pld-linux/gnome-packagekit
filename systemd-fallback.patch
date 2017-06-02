@@ -1,32 +1,30 @@
-diff -urN gnome-packagekit-3.6.0/configure.ac gnome-packagekit-3.6.0.new/configure.ac
---- gnome-packagekit-3.6.0/configure.ac	2012-09-25 16:19:50.000000000 +0200
-+++ gnome-packagekit-3.6.0.new/configure.ac	2012-10-09 13:56:53.458180536 +0200
-@@ -146,7 +146,7 @@
+--- gnome-packagekit-3.24.0/configure.ac.orig	2017-06-02 20:22:27.252302717 +0200
++++ gnome-packagekit-3.24.0/configure.ac	2017-06-02 20:45:14.838953769 +0200
+@@ -129,7 +129,7 @@
                [with_systemd=auto])
  
  PKG_CHECK_MODULES(SYSTEMD,
--                  [libsystemd-login polkit-gobject-1],
-+                  [libsystemd-daemon libsystemd-login polkit-gobject-1 dbus-glib-1],
+-                  [libsystemd polkit-gobject-1],
++                  [libsystemd polkit-gobject-1 dbus-glib-1],
                    [have_systemd=yes], [have_systemd=no])
  
  AC_MSG_CHECKING([whether to use systemd])
-diff -urN gnome-packagekit-3.6.0/src/Makefile.am gnome-packagekit-3.6.0.new/src/Makefile.am
---- gnome-packagekit-3.6.0/src/Makefile.am	2012-05-15 14:44:47.000000000 +0200
-+++ gnome-packagekit-3.6.0.new/src/Makefile.am	2012-10-09 13:59:32.313986610 +0200
-@@ -87,6 +87,8 @@
+--- gnome-packagekit-3.24.0/src/Makefile.am.orig	2017-06-02 20:45:59.025619930 +0200
++++ gnome-packagekit-3.24.0/src/Makefile.am	2017-06-02 20:51:32.112282791 +0200
+@@ -42,6 +42,8 @@
+ 	gpk-common.h					\
+ 	gpk-task.c					\
  	gpk-task.h					\
- 	gpk-error.c					\
- 	gpk-error.h					\
 +	egg-console-kit.c				\
 +	egg-console-kit.h				\
- 	$(NULL)
+ 	gpk-error.c					\
+ 	gpk-error.h
  
- if WITH_SYSTEMD
---- gnome-packagekit-3.18.0/src/gpk-update-viewer.c.orig	2015-08-19 14:49:32.000000000 +0200
-+++ gnome-packagekit-3.18.0/src/gpk-update-viewer.c	2015-11-15 10:25:06.034263689 +0100
-@@ -32,8 +32,10 @@
- #include "egg-string.h"
- #include "egg-markdown.h"
+--- gnome-packagekit-3.24.0/src/gpk-update-viewer.c.orig	2016-12-06 20:33:18.000000000 +0100
++++ gnome-packagekit-3.24.0/src/gpk-update-viewer.c	2017-06-02 20:53:20.828948216 +0200
+@@ -30,8 +30,10 @@
+ #include <packagekit-glib2/packagekit.h>
+ 
  #ifdef HAVE_SYSTEMD
 +#include <systemd/sd-daemon.h>
  #include "systemd-proxy.h"
@@ -35,15 +33,15 @@ diff -urN gnome-packagekit-3.6.0/src/Makefile.am gnome-packagekit-3.6.0.new/src/
  
  #include "gpk-cell-renderer-info.h"
  #include "gpk-cell-renderer-restart.h"
-@@ -58,6 +60,7 @@
+@@ -56,6 +58,7 @@ static	PkRestartEnum		 restart_worst = 0
  #ifdef HAVE_SYSTEMD
  static  SystemdProxy		*proxy = NULL;
  #endif
 +static	EggConsoleKit		*console = NULL;
- static	EggMarkdown		*markdown = NULL;
  static	GCancellable		*cancellable = NULL;
  static	GSettings		*settings = NULL;
-@@ -242,10 +245,11 @@
+ static	GPtrArray		*update_array = NULL;
+@@ -225,10 +228,11 @@ gpk_update_viewer_check_restart (void)
  	if (restart_update == PK_RESTART_ENUM_SYSTEM ||
  	    restart_update == PK_RESTART_ENUM_SECURITY_SYSTEM) {
  #ifdef HAVE_SYSTEMD
@@ -58,13 +56,12 @@ diff -urN gnome-packagekit-3.6.0/src/Makefile.am gnome-packagekit-3.6.0.new/src/
  	}
  
  	/* only show the button if we can do the action */
-@@ -266,13 +270,18 @@
+@@ -249,12 +253,17 @@ gpk_update_viewer_check_restart (void)
  	/* do the action */
  	if (restart_update == PK_RESTART_ENUM_SYSTEM) {
  #ifdef HAVE_SYSTEMD
--		ret = systemd_proxy_restart (proxy, &error);
 +		if (proxy != NULL)
-+			ret = systemd_proxy_restart (proxy, &error);
+ 		ret = systemd_proxy_restart (proxy, &error);
 +		else
 +#endif
 +			/* use consolekit to restart */
@@ -73,13 +70,12 @@ diff -urN gnome-packagekit-3.6.0/src/Makefile.am gnome-packagekit-3.6.0.new/src/
  		if (!ret) {
  			/* TRANSLATORS: the PackageKit request did not complete, and it did not send an error */
  			gpk_update_viewer_error_dialog (_("Could not restart"), NULL, error->message);
- 			g_error_free (error);
  		}
 -#endif
  	}
- out:
  	return ret;
-@@ -3207,8 +3216,12 @@
+ }
+@@ -2753,8 +2762,12 @@ gpk_update_viewer_application_startup_cb
  
  	settings = g_settings_new (GPK_SETTINGS_SCHEMA);
  #ifdef HAVE_SYSTEMD
@@ -91,9 +87,9 @@ diff -urN gnome-packagekit-3.6.0/src/Makefile.am gnome-packagekit-3.6.0.new/src/
 +		console = egg_console_kit_new ();
 +
  	cancellable = g_cancellable_new ();
- 	markdown = egg_markdown_new ();
- 	egg_markdown_set_output (markdown, EGG_MARKDOWN_OUTPUT_PANGO);
-@@ -3450,6 +3463,8 @@
+ 
+ 	control = pk_control_new ();
+@@ -2980,6 +2993,8 @@ main (int argc, char *argv[])
  	if (proxy != NULL)
  		systemd_proxy_free (proxy);
  #endif
