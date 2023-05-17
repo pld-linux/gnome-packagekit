@@ -1,8 +1,8 @@
---- gnome-packagekit-3.32.0/meson.build.orig	2019-03-08 13:10:25.000000000 +0100
-+++ gnome-packagekit-3.32.0/meson.build	2019-12-01 11:02:58.011909698 +0100
-@@ -87,6 +87,7 @@
- if get_option('systemd')
+--- gnome-packagekit-43.0/meson.build.orig	2023-05-17 19:57:31.162693696 +0200
++++ gnome-packagekit-43.0/meson.build	2023-05-17 20:10:12.318570160 +0200
+@@ -88,6 +88,7 @@ if get_option('systemd')
    systemd = dependency('libsystemd')
+   conf.set('HAVE_SYSTEMD', 1)
    polkit = dependency('polkit-gobject-1')
 +  dbusglib = dependency('dbus-glib-1')
  endif
@@ -21,8 +21,8 @@
  endif
  
  executable(
---- gnome-packagekit-3.24.0/src/gpk-update-viewer.c.orig	2016-12-06 20:33:18.000000000 +0100
-+++ gnome-packagekit-3.24.0/src/gpk-update-viewer.c	2017-06-02 20:53:20.828948216 +0200
+--- gnome-packagekit-43.0/src/gpk-update-viewer.c.orig	2022-11-04 12:29:10.000000000 +0100
++++ gnome-packagekit-43.0/src/gpk-update-viewer.c	2023-05-17 20:13:40.120777732 +0200
 @@ -30,8 +30,10 @@
  #include <packagekit-glib2/packagekit.h>
  
@@ -57,7 +57,7 @@
  	}
  
  	/* only show the button if we can do the action */
-@@ -249,12 +253,17 @@ gpk_update_viewer_check_restart (void)
+@@ -249,12 +253,16 @@ gpk_update_viewer_check_restart (void)
  	/* do the action */
  	if (restart_update == PK_RESTART_ENUM_SYSTEM) {
  #ifdef HAVE_SYSTEMD
@@ -67,16 +67,15 @@
 +#endif
 +			/* use consolekit to restart */
 +			ret = egg_console_kit_restart (console, &error);
-+
  		if (!ret) {
  			/* TRANSLATORS: the PackageKit request did not complete, and it did not send an error */
  			gpk_update_viewer_error_dialog (_("Could not restart"), NULL, error->message);
  		}
 -#endif
- 	}
- 	return ret;
- }
-@@ -2753,8 +2762,12 @@ gpk_update_viewer_application_startup_cb
+ 	} else if (restart_update == PK_RESTART_ENUM_SESSION) {
+ 		g_autoptr(GDBusConnection) bus = NULL;
+ 		bus = g_bus_get_sync (G_BUS_TYPE_SESSION, NULL, NULL);
+@@ -2746,8 +2754,12 @@ gpk_update_viewer_application_startup_cb
  
  	settings = g_settings_new (GPK_SETTINGS_SCHEMA);
  #ifdef HAVE_SYSTEMD
@@ -90,7 +89,7 @@
  	cancellable = g_cancellable_new ();
  
  	control = pk_control_new ();
-@@ -2980,6 +2993,8 @@ main (int argc, char *argv[])
+@@ -2975,6 +2987,8 @@ main (int argc, char *argv[])
  	if (proxy != NULL)
  		systemd_proxy_free (proxy);
  #endif
