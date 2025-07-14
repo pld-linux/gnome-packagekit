@@ -56,7 +56,7 @@ narzędzi stworzonych do instalacji, aktualizacji i usuwania pakietów.
 
 %prep
 %setup -q
-%patch0 -p1 -b .orig
+%patch -P0 -p1 -b .orig
 
 %build
 %meson build \
