@@ -59,15 +59,15 @@ narzędzi stworzonych do instalacji, aktualizacji i usuwania pakietów.
 %patch -P0 -p1 -b .orig
 
 %build
-%meson build \
+%meson \
 	%{!?with_systemd:-Dsystemd=false}
 
-%ninja_build -C build
+%meson_build
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%ninja_install -C build
+%meson_install
 
 %py_postclean
 
